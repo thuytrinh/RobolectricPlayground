@@ -26,6 +26,7 @@ dependencies {
   implementation("androidx.appcompat:appcompat:1.2.0")
   implementation("androidx.work:work-runtime-ktx:2.4.0")
   implementation("androidx.lifecycle:lifecycle-livedata-ktx:2.2.0")
+  implementation("org.koin:koin-androidx-fragment:2.1.6")
 
   testImplementation("junit:junit:4.13")
   testImplementation("org.robolectric:robolectric:4.4")
@@ -33,4 +34,5 @@ dependencies {
   testImplementation("androidx.test.ext:junit:1.1.2")
   testImplementation("androidx.work:work-testing:2.4.0")
   testImplementation("androidx.arch.core:core-testing:2.1.0")
+  testImplementation("org.koin:koin-test:2.1.6")
 }
