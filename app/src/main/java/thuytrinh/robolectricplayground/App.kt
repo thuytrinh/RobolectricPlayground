@@ -2,34 +2,36 @@ package thuytrinh.robolectricplayground
 
 import android.app.Application
 import android.content.Context
-import androidx.work.*
+import androidx.work.OneTimeWorkRequest
+import androidx.work.WorkManager
+import androidx.work.Worker
+import androidx.work.WorkerParameters
+import org.koin.android.ext.android.inject
 import org.koin.android.ext.koin.androidContext
 import org.koin.core.context.startKoin
+import org.koin.core.module.Module
 import org.koin.dsl.module
 import java.io.File
 
 class App : Application() {
+  private val appController: AppController by inject()
+
   override fun onCreate() {
     super.onCreate()
 
     startKoin {
       androidContext(this@App)
-      modules(
-        listOf(
-          module {
-            single { WorkManager.getInstance(get()) }
-          }
-        )
-      )
+      modules(getAppModules())
     }
 
-    WorkManager.initialize(
-      this,
-      Configuration.Builder()
-        .build()
-    )
+    appController.initialize()
+  }
+}
 
-    val workManager = WorkManager.getInstance(this)
+class AppController(
+  private val workManager: WorkManager
+) {
+  fun initialize() {
     workManager.enqueue(
       OneTimeWorkRequest.Builder(WriteFileWorker::class.java)
         .build()
@@ -46,3 +48,10 @@ class WriteFileWorker(
     return Result.success()
   }
 }
+
+fun getAppModules(): List<Module> = listOf(
+  module {
+    single { WorkManager.getInstance(get()) }
+    single { AppController(get()) }
+  }
+)
